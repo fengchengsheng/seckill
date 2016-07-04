@@ -1,6 +1,5 @@
 package org.seckill.service;
 
-import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -42,29 +41,43 @@ public class SeckillServiceTest {
 		logger.info("seckill={}", seckill);
 	}
 
+	//集成测试代码完整逻辑，注意可重复执行
 	@Test
-	public void testExportSeckillUrl() throws Exception {
+	public void testSeckillLogic() throws Exception {
 		long id =1000L;
 		Exposer exposer = seckillService.exportSeckillUrl(id);
-		logger.info("exposer={}", exposer);
-//		Exposer{exposed=true,md5=37fd7884a075f2a98fd3c605ff8bb04b,seckillId=1000,now=0,start=0,end=0}
-
+		if (exposer.isExposed()) {
+			logger.info("exposer={}", exposer);
+			long phone = 15357826532L;
+			String md5 = exposer.getMd5();
+			try {
+				SeckillExecution seckillExecution = seckillService.executeSeckill(id, phone, md5);
+				logger.info("seckillExecution={}", seckillExecution);
+			} catch (RepeatKillException e) {
+				logger.error(e.getMessage());
+			} catch (SeckillCloseException e) {
+				logger.error(e.getMessage());
+			}
+		} else {
+			//秒杀未开启
+			logger.warn("exposer={}", exposer);
+		}
 	}
 
-	@Test
-	public void testExecuteSeckill() throws Exception {
-		long id = 1000L;
-		long phone = 15357826532L;
-		String md5 = "37fd7884a075f2a98fd3c605ff8bb04b";
-		try {
-			SeckillExecution seckillExecution = seckillService.executeSeckill(id, phone, md5);
-			logger.info("seckillExecution={}", seckillExecution);
-		} catch (RepeatKillException e) {
-			logger.error(e.getMessage());
-		} catch (SeckillCloseException e) {
-			logger.error(e.getMessage());
-		}
-		
+//	@Test
+//	public void testExecuteSeckill() throws Exception {
+//		long id = 1000L;
+//		long phone = 15357826532L;
+//		String md5 = "37fd7884a075f2a98fd3c605ff8bb04b";
+//		try {
+//			SeckillExecution seckillExecution = seckillService.executeSeckill(id, phone, md5);
+//			logger.info("seckillExecution={}", seckillExecution);
+//		} catch (RepeatKillException e) {
+//			logger.error(e.getMessage());
+//		} catch (SeckillCloseException e) {
+//			logger.error(e.getMessage());
+//		}
+//		
 		/*
 10:54:55.292 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
 10:54:55.310 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
@@ -89,6 +102,6 @@ public class SeckillServiceTest {
 10:54:55.583 [main] INFO  o.seckill.service.SeckillServiceTest - seckillExecution=SeckillExecution{seckillId=1000,state=1,stateInfo=秒杀成功,successKilled=SuccessKilled{seckillId=1000,userPhone=15357826532,state=0,createTime=Fri Jul 01 10:54:55 CST 2016}}
 
 		 */
-	}
+//	}
 
 }

@@ -1,5 +1,6 @@
 package org.seckill.exception;
 
+@SuppressWarnings("serial")
 public class SeckillException extends RuntimeException {
 
 	public SeckillException(String message, Throwable cause) {

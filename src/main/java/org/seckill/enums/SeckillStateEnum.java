@@ -30,7 +30,8 @@ public enum SeckillStateEnum {
 	} 
 	
 	public static SeckillStateEnum stateOf(int index) {
-		for (SeckillStateEnum state : values()) {
+		for (SeckillStateEnum state : SeckillStateEnum.values()) {
+//		for (SeckillStateEnum state : values()) { 
 			if (state.getState() == index) {
 				return state;
 			}

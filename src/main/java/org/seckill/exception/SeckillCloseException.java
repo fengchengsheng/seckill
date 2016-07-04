@@ -5,6 +5,7 @@ package org.seckill.exception;
  * Created By FCS on 2016年6月30日
  *
  */
+@SuppressWarnings("serial")
 public class SeckillCloseException extends SeckillException {
 
 	public SeckillCloseException(String message, Throwable cause) {
