@@ -1,0 +1,11 @@
+项目采用SpringMVC+Spring+MyBatis（整合框架）
+相关技术：
+	数据库：MySQL 
+	框架：MyBatis Spring SpringMVC 
+	前端：Bootstrap jquery
+	高并发
+	项目管理：Maven
+Dao:
+	Dao层工作演变为：接口设计+SQL编写
+	代码和SQL的分离，方便Review
+	Dao拼接等逻辑在Service层完成
