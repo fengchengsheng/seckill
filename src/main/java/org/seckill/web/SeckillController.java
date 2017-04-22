@@ -81,7 +81,6 @@ public class SeckillController {
 		if (phone == null) {
 			return new SeckillResult<SeckillExecution>(false, "未注册");
 		}
-		SeckillResult<SeckillException> result;
 		try {
 			SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
 			return new SeckillResult<SeckillExecution>(true, execution);
