@@ -4,6 +4,11 @@
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
   version="3.1"
   metadata-complete="true">
+  
+  <welcome-file-list>
+  	<welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
   <!-- 配置DispatcherServlet -->
   <servlet>
   	<servlet-name>seckill-dispatcher</servlet-name>
@@ -20,7 +25,7 @@
   
   <servlet-mapping>
   	<servlet-name>seckill-dispatcher</servlet-name>
-  	<!-- 默认匹配所有请求 -->
+  	<!-- 默认匹配所有请求 restful风格url不用*.do或*.action-->
   	<url-pattern>/</url-pattern>
   </servlet-mapping>
   

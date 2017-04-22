@@ -13,7 +13,7 @@
 	<!-- 配置springMVC -->
 	<!-- 1：开启springMVC注解模式 -->
 	<!-- 简化配置： 
-		（1）自动注册 
+		（1）自动注册 DefaultAnnotationHandlerMapping,AnnotationMethodHandlerAdapter
 		（2）提供一系列：数据绑定，数字和日期的formate @NummberFormat, @DateTimeFormate,
 			xml,json默认读写支持
 	 -->
@@ -28,7 +28,7 @@
 	<!-- 3：配置jsp 显示ViewResolver -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
-		<property name="prefix" value="/WEB-INF/jsp"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 	
