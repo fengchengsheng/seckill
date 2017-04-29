@@ -48,7 +48,7 @@ public class SeckillServiceTest {
 		Exposer exposer = seckillService.exportSeckillUrl(id);
 		if (exposer.isExposed()) {
 			logger.info("exposer={}", exposer);
-			long phone = 15357826532L;
+			long phone = 15357826530L;
 			String md5 = exposer.getMd5();
 			try {
 				SeckillExecution seckillExecution = seckillService.executeSeckill(id, phone, md5);
@@ -63,45 +63,44 @@ public class SeckillServiceTest {
 			logger.warn("exposer={}", exposer);
 		}
 	}
-
-//	@Test
-//	public void testExecuteSeckill() throws Exception {
-//		long id = 1000L;
-//		long phone = 15357826532L;
-//		String md5 = "37fd7884a075f2a98fd3c605ff8bb04b";
-//		try {
-//			SeckillExecution seckillExecution = seckillService.executeSeckill(id, phone, md5);
-//			logger.info("seckillExecution={}", seckillExecution);
-//		} catch (RepeatKillException e) {
-//			logger.error(e.getMessage());
-//		} catch (SeckillCloseException e) {
-//			logger.error(e.getMessage());
-//		}
-//		
-		/*
-10:54:55.292 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Creating a new SqlSession
-10:54:55.310 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.318 [main] DEBUG o.m.s.t.SpringManagedTransaction - JDBC Connection [com.mchange.v2.c3p0.impl.NewProxyConnection@1a06f52] will be managed by Spring
-10:54:55.324 [main] DEBUG o.s.dao.SeckillDao.reduceNumber - ==>  Preparing: update seckill set number = number - 1 where seckill_id = ? and start_time <= ? and end_time >= ? and number > 0; 
-10:54:55.354 [main] DEBUG o.s.dao.SeckillDao.reduceNumber - ==> Parameters: 1000(Long), 2016-07-01 10:54:55.278(Timestamp), 2016-07-01 10:54:55.278(Timestamp)
-10:54:55.356 [main] DEBUG o.s.dao.SeckillDao.reduceNumber - <==    Updates: 1
-10:54:55.356 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.356 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805] from current transaction
-10:54:55.356 [main] DEBUG o.s.d.S.insertSuccessKilled - ==>  Preparing: insert ignore into success_killed(seckill_id,user_phone,state) values (?,?,0) 
-10:54:55.357 [main] DEBUG o.s.d.S.insertSuccessKilled - ==> Parameters: 1000(Long), 15357826532(Long)
-10:54:55.504 [main] DEBUG o.s.d.S.insertSuccessKilled - <==    Updates: 1
-10:54:55.515 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.516 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Fetched SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805] from current transaction
-10:54:55.517 [main] DEBUG o.s.d.S.queryByIdWithSeckill - ==>  Preparing: select sk.seckill_id, sk.user_phone, sk.create_time, sk.state, s.name "seckill.name", s.number "seckill.number", s.start_time "seckill.start_time", s.end_time "seckill.end_time", s.create_time "seckill.create_time" from success_killed sk inner join seckill s on sk.seckill_id = s.seckill_id where sk.seckill_id = ? and sk.user_phone=? 
-10:54:55.518 [main] DEBUG o.s.d.S.queryByIdWithSeckill - ==> Parameters: 1000(Long), 15357826532(Long)
-10:54:55.530 [main] DEBUG o.s.d.S.queryByIdWithSeckill - <==      Total: 1
-10:54:55.536 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.537 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization committing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.537 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.537 [main] DEBUG org.mybatis.spring.SqlSessionUtils - Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1e01805]
-10:54:55.583 [main] INFO  o.seckill.service.SeckillServiceTest - seckillExecution=SeckillExecution{seckillId=1000,state=1,stateInfo=秒杀成功,successKilled=SuccessKilled{seckillId=1000,userPhone=15357826532,state=0,createTime=Fri Jul 01 10:54:55 CST 2016}}
-
-		 */
-//	}
-
+	
+	//普通秒杀
+	@Test
+	public void testExecuteSeckill() throws Exception{
+		long seckillId = 1000L;
+		long phone = 15255114307L;
+		Exposer exposer = seckillService.exportSeckillUrl(seckillId);
+		if (exposer.isExposed()) {
+			String md5 = exposer.getMd5();
+			try {
+				SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
+				logger.info(execution.getStateInfo());
+			} catch (Exception e) {
+				logger.warn(e.getMessage(), e);
+			}
+			
+		} else {
+			//秒杀未开启
+			logger.warn("exposer={}", exposer);
+		}
+	}
+	//测试五次计时：0.722s,0.503s,0.411s,0.564s,0.465s
+	
+	//存储过程秒杀
+	@Test
+	public void testExcuteSeckillProcedure() {
+		long seckillId = 1000L;
+		long phone = 15355114301L;
+		Exposer exposer = seckillService.exportSeckillUrl(seckillId);
+		if (exposer.isExposed()) {
+			String md5 = exposer.getMd5();
+			SeckillExecution execution = seckillService.executeSeckillProcedure(seckillId, phone, md5);
+			logger.info(execution.getStateInfo());
+		} else {
+			//秒杀未开启
+			logger.warn("exposer={}", exposer);
+		}
+	}
+	//测试五次计时：0.641s,0.455s,0.458s,0.439s,0.417s
+	//两种方法平均时间差距不大，本机无网络延迟，本测试中gc也可忽略不计，所以优化效果不明显
 }

@@ -80,20 +80,25 @@ public class SeckillController {
 		if (phone == null) {
 			return new SeckillResult<SeckillExecution>(false, "未注册");
 		}
-		try {
-			SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
-			return new SeckillResult<SeckillExecution>(true, execution);
-		} catch (RepeatKillException e) {
-			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.REPEAT_KILL);
-			return new SeckillResult<SeckillExecution>(true, execution);
-		} catch (SeckillCloseException e) {
-			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.END);
-			return new SeckillResult<SeckillExecution>(true, execution);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.INNER_ERROR);
-			return new SeckillResult<SeckillExecution>(true, execution);
-		}
+		//普通秒杀
+//		try {
+//			SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
+//			return new SeckillResult<SeckillExecution>(true, execution);
+//		} catch (RepeatKillException e) {
+//			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.REPEAT_KILL);
+//			return new SeckillResult<SeckillExecution>(true, execution);
+//		} catch (SeckillCloseException e) {
+//			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.END);
+//			return new SeckillResult<SeckillExecution>(true, execution);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage(), e);
+//			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.INNER_ERROR);
+//			return new SeckillResult<SeckillExecution>(true, execution);
+//		}
+		
+		//存储过程执行秒杀
+		SeckillExecution execution = seckillService.executeSeckillProcedure(seckillId, phone, md5);
+		return new SeckillResult<SeckillExecution>(true, execution);
 	}
 	
     @RequestMapping(value = "/time/now",method = RequestMethod.GET)
